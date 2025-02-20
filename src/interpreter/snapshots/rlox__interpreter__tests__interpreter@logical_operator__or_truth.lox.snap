@@ -1,0 +1,10 @@
+---
+source: src/interpreter/mod.rs
+expression: out_str
+input_file: test_programs/interpreter/logical_operator/or_truth.lox
+---
+ok
+ok
+true
+0
+s

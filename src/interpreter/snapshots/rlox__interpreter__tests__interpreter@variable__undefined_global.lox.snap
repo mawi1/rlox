@@ -1,0 +1,6 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/variable/undefined_global.lox
+---
+Runtime error: [ line 1 ] : Undefined variable 'notDefined'.

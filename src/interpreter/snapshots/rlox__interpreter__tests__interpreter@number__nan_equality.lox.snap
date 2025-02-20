@@ -1,0 +1,9 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/number/nan_equality.lox
+---
+false
+true
+false
+true

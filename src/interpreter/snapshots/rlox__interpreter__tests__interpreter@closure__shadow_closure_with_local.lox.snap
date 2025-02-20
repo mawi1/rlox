@@ -1,0 +1,8 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/closure/shadow_closure_with_local.lox
+---
+closure
+shadow
+closure

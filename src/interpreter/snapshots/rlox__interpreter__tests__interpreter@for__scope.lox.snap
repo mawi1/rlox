@@ -1,0 +1,9 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/for/scope.lox
+---
+0
+-1
+after
+0

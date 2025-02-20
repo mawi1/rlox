@@ -1,0 +1,13 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/operator/not.lox
+---
+false
+true
+true
+false
+false
+true
+false
+false

@@ -1,0 +1,8 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/for/statement_initializer.lox
+---
+Syntax error(s):
+[ line 3 ] : Expect expression.
+[ line 3 ] : Expect 'Semicolon'.

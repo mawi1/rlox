@@ -1,0 +1,54 @@
+---
+source: src/parser.rs
+expression: parser.parse()
+input_file: test_programs/parsing/expressions/parse.lox
+---
+Ok(
+    [
+        VarStatement {
+            name: "a",
+            initializer: Some(
+                BinaryExpression {
+                    left: GroupingExpression(
+                        BinaryExpression {
+                            left: LiteralExpression(
+                                Number(
+                                    5.0,
+                                ),
+                            ),
+                            right: GroupingExpression(
+                                BinaryExpression {
+                                    left: LiteralExpression(
+                                        Number(
+                                            3.0,
+                                        ),
+                                    ),
+                                    right: LiteralExpression(
+                                        Number(
+                                            1.0,
+                                        ),
+                                    ),
+                                    operator: Substract,
+                                    line: 2,
+                                },
+                            ),
+                            operator: Multiply,
+                            line: 2,
+                        },
+                    ),
+                    right: NegExpression {
+                        expression: LiteralExpression(
+                            Number(
+                                1.0,
+                            ),
+                        ),
+                        line: 2,
+                    },
+                    operator: Add,
+                    line: 2,
+                },
+            ),
+            line: 2,
+        },
+    ],
+)

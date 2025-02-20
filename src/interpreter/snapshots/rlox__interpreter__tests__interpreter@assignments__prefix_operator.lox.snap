@@ -1,0 +1,7 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/assignments/prefix_operator.lox
+---
+Syntax error(s):
+[ line 2 ] : Invalid assignment target.

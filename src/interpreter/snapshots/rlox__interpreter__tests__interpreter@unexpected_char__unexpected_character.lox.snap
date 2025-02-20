@@ -1,0 +1,7 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/unexpected_char/unexpected_character.lox
+---
+Scanner error(s):
+[ line 3 ] : Unexpected character: |.

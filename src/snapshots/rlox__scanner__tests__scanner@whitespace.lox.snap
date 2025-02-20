@@ -1,0 +1,39 @@
+---
+source: src/scanner.rs
+expression: scan_tokens(&input)
+input_file: test_programs/scanning/whitespace.lox
+---
+Ok(
+    [
+        Token {
+            ty: Identifier,
+            lexeme: "space",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Identifier,
+            lexeme: "tabs",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Identifier,
+            lexeme: "newlines",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Identifier,
+            lexeme: "end",
+            literal: None,
+            line: 6,
+        },
+        Token {
+            ty: Eof,
+            lexeme: "",
+            literal: None,
+            line: 13,
+        },
+    ],
+)

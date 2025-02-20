@@ -1,0 +1,7 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/variable/use_false_as_var.lox
+---
+Syntax error(s):
+[ line 2 ] : Expect 'Identifier'.

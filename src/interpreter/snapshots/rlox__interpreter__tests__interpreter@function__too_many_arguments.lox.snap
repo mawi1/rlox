@@ -1,0 +1,7 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/function/too_many_arguments.lox
+---
+Syntax error(s):
+[ line 260 ] : Can't have more than 255 arguments.

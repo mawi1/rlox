@@ -1,0 +1,9 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/closure/assign_to_closure.lox
+---
+local
+after f
+after f
+after g

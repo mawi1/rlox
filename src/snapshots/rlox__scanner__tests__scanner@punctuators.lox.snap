@@ -1,0 +1,123 @@
+---
+source: src/scanner.rs
+expression: scan_tokens(&input)
+input_file: test_programs/scanning/punctuators.lox
+---
+Ok(
+    [
+        Token {
+            ty: LeftParen,
+            lexeme: "(",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: RightParen,
+            lexeme: ")",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: LeftBrace,
+            lexeme: "{",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: RightBrace,
+            lexeme: "}",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Semicolon,
+            lexeme: ";",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Comma,
+            lexeme: ",",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Plus,
+            lexeme: "+",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Minus,
+            lexeme: "-",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Star,
+            lexeme: "*",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: BangEqual,
+            lexeme: "!=",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: EqualEqual,
+            lexeme: "==",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: LessEqual,
+            lexeme: "<=",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: GreaterEqual,
+            lexeme: ">=",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: BangEqual,
+            lexeme: "!=",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Less,
+            lexeme: "<",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Greater,
+            lexeme: ">",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Slash,
+            lexeme: "/",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Dot,
+            lexeme: ".",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Eof,
+            lexeme: "",
+            literal: None,
+            line: 22,
+        },
+    ],
+)

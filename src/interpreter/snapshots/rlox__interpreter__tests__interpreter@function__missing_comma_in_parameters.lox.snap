@@ -1,0 +1,7 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/function/missing_comma_in_parameters.lox
+---
+Syntax error(s):
+[ line 3 ] : Expect 'RightParen'.

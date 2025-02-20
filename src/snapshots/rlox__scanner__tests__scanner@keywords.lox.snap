@@ -1,0 +1,105 @@
+---
+source: src/scanner.rs
+expression: scan_tokens(&input)
+input_file: test_programs/scanning/keywords.lox
+---
+Ok(
+    [
+        Token {
+            ty: And,
+            lexeme: "and",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Class,
+            lexeme: "class",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Else,
+            lexeme: "else",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: False,
+            lexeme: "false",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: For,
+            lexeme: "for",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Fun,
+            lexeme: "fun",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: If,
+            lexeme: "if",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Nil,
+            lexeme: "nil",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Or,
+            lexeme: "or",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Return,
+            lexeme: "return",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Super,
+            lexeme: "super",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: This,
+            lexeme: "this",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: True,
+            lexeme: "true",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Var,
+            lexeme: "var",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: While,
+            lexeme: "while",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Eof,
+            lexeme: "",
+            literal: None,
+            line: 19,
+        },
+    ],
+)

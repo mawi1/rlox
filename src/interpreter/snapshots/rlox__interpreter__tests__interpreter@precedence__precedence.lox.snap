@@ -1,0 +1,18 @@
+---
+source: src/interpreter/mod.rs
+expression: out_str
+input_file: test_programs/interpreter/precedence/precedence.lox
+---
+14
+8
+4
+0
+true
+true
+true
+true
+0
+0
+0
+0
+4

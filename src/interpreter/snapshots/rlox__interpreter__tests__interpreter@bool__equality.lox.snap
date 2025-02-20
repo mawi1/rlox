@@ -1,0 +1,23 @@
+---
+source: src/interpreter/mod.rs
+expression: out_str
+input_file: test_programs/interpreter/bool/equality.lox
+---
+true
+false
+false
+true
+false
+false
+false
+false
+false
+false
+true
+true
+false
+true
+true
+true
+true
+true

@@ -1,0 +1,11 @@
+---
+source: src/interpreter/mod.rs
+expression: out_str
+input_file: test_programs/interpreter/while/syntax.lox
+---
+1
+2
+3
+0
+1
+2

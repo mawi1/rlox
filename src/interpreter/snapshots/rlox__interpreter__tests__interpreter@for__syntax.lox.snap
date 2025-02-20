@@ -1,0 +1,19 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/for/syntax.lox
+---
+1
+2
+3
+0
+1
+2
+done
+0
+1
+0
+1
+2
+0
+1

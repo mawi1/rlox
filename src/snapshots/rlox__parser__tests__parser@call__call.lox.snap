@@ -1,0 +1,35 @@
+---
+source: src/parser.rs
+expression: parser.parse()
+input_file: test_programs/parsing/call/call.lox
+---
+Ok(
+    [
+        ExpressionStatement(
+            CallExpression {
+                callee: VariableExpression {
+                    name: "fib",
+                    maybe_distance: None,
+                    line: 1,
+                },
+                arguments: [
+                    BinaryExpression {
+                        left: LiteralExpression(
+                            Number(
+                                3.0,
+                            ),
+                        ),
+                        right: LiteralExpression(
+                            Number(
+                                2.0,
+                            ),
+                        ),
+                        operator: Add,
+                        line: 1,
+                    },
+                ],
+                line: 1,
+            },
+        ),
+    ],
+)

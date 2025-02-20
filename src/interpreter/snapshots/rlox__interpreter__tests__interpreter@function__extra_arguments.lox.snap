@@ -1,0 +1,6 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/function/extra_arguments.lox
+---
+Runtime error: [ line 6 ] : Expected 2 arguments but got 4.

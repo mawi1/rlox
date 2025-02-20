@@ -1,0 +1,10 @@
+---
+source: src/interpreter/mod.rs
+expression: out_str
+input_file: test_programs/interpreter/if/truth.lox
+---
+false
+nil
+true
+0
+empty

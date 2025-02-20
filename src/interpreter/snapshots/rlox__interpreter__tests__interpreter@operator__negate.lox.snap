@@ -1,0 +1,8 @@
+---
+source: src/interpreter/mod.rs
+expression: out_str
+input_file: test_programs/interpreter/operator/negate.lox
+---
+-3
+3
+-3

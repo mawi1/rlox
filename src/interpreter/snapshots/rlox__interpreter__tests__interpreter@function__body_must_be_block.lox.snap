@@ -1,0 +1,7 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/function/body_must_be_block.lox
+---
+Syntax error(s):
+[ line 3 ] : Expect 'LeftBrace'.

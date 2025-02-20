@@ -1,0 +1,63 @@
+---
+source: src/scanner.rs
+expression: scan_tokens(&input)
+input_file: test_programs/scanning/identifiers.lox
+---
+Ok(
+    [
+        Token {
+            ty: Identifier,
+            lexeme: "andy",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Identifier,
+            lexeme: "formless",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Identifier,
+            lexeme: "fo",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Identifier,
+            lexeme: "_",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Identifier,
+            lexeme: "_123",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Identifier,
+            lexeme: "_abc",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Identifier,
+            lexeme: "ab123",
+            literal: None,
+            line: 1,
+        },
+        Token {
+            ty: Identifier,
+            lexeme: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_",
+            literal: None,
+            line: 2,
+        },
+        Token {
+            ty: Eof,
+            lexeme: "",
+            literal: None,
+            line: 13,
+        },
+    ],
+)

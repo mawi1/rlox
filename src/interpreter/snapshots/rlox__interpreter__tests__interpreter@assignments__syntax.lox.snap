@@ -1,0 +1,7 @@
+---
+source: src/interpreter/mod.rs
+expression: out_str
+input_file: test_programs/interpreter/assignments/syntax.lox
+---
+var
+var

@@ -1,0 +1,7 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/variable/scope_reuse_in_different_blocks.lox
+---
+first
+second

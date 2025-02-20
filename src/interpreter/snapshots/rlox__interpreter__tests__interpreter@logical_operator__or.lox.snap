@@ -1,0 +1,12 @@
+---
+source: src/interpreter/mod.rs
+expression: out_str
+input_file: test_programs/interpreter/logical_operator/or.lox
+---
+1
+1
+true
+false
+false
+false
+true

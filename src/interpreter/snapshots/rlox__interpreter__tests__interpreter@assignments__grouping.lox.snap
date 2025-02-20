@@ -1,0 +1,7 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/assignments/grouping.lox
+---
+Syntax error(s):
+[ line 2 ] : Invalid assignment target.

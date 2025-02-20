@@ -1,0 +1,76 @@
+---
+source: src/parser.rs
+expression: parser.parse()
+input_file: test_programs/parsing/function/return.lox
+---
+Ok(
+    [
+        FunctionStatement {
+            name: "add",
+            parameters: [
+                Parameter {
+                    name: "a",
+                    line: 1,
+                },
+                Parameter {
+                    name: "b",
+                    line: 1,
+                },
+                Parameter {
+                    name: "c",
+                    line: 1,
+                },
+            ],
+            statements: [
+                VarStatement {
+                    name: "r",
+                    initializer: Some(
+                        BinaryExpression {
+                            left: BinaryExpression {
+                                left: VariableExpression {
+                                    name: "a",
+                                    maybe_distance: None,
+                                    line: 2,
+                                },
+                                right: VariableExpression {
+                                    name: "b",
+                                    maybe_distance: None,
+                                    line: 2,
+                                },
+                                operator: Add,
+                                line: 2,
+                            },
+                            right: VariableExpression {
+                                name: "c",
+                                maybe_distance: None,
+                                line: 2,
+                            },
+                            operator: Add,
+                            line: 2,
+                        },
+                    ),
+                    line: 2,
+                },
+                PrintStatement {
+                    expression: VariableExpression {
+                        name: "r",
+                        maybe_distance: None,
+                        line: 3,
+                    },
+                    line: 3,
+                },
+                ReturnStatement {
+                    maybe_expression: Some(
+                        VariableExpression {
+                            name: "r",
+                            maybe_distance: None,
+                            line: 4,
+                        },
+                    ),
+                    line: 4,
+                },
+            ],
+            line: 1,
+        },
+    ],
+)

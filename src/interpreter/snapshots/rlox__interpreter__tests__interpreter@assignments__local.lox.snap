@@ -1,0 +1,9 @@
+---
+source: src/interpreter/mod.rs
+expression: out_str
+input_file: test_programs/interpreter/assignments/local.lox
+---
+before
+after
+arg
+arg

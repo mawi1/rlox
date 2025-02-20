@@ -1,0 +1,67 @@
+---
+source: src/scanner.rs
+expression: scan_tokens(&input)
+input_file: test_programs/scanning/numbers.lox
+---
+Ok(
+    [
+        Token {
+            ty: Number,
+            lexeme: "123",
+            literal: Some(
+                Number(
+                    123.0,
+                ),
+            ),
+            line: 1,
+        },
+        Token {
+            ty: Number,
+            lexeme: "123.456",
+            literal: Some(
+                Number(
+                    123.456,
+                ),
+            ),
+            line: 2,
+        },
+        Token {
+            ty: Dot,
+            lexeme: ".",
+            literal: None,
+            line: 3,
+        },
+        Token {
+            ty: Number,
+            lexeme: "456",
+            literal: Some(
+                Number(
+                    456.0,
+                ),
+            ),
+            line: 3,
+        },
+        Token {
+            ty: Number,
+            lexeme: "123",
+            literal: Some(
+                Number(
+                    123.0,
+                ),
+            ),
+            line: 4,
+        },
+        Token {
+            ty: Dot,
+            lexeme: ".",
+            literal: None,
+            line: 4,
+        },
+        Token {
+            ty: Eof,
+            lexeme: "",
+            literal: None,
+            line: 13,
+        },
+    ],
+)

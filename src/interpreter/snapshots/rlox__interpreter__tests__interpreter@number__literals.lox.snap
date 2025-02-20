@@ -1,0 +1,11 @@
+---
+source: src/interpreter/mod.rs
+expression: out_str
+input_file: test_programs/interpreter/number/literals.lox
+---
+123
+987654
+0
+-0
+123.456
+-0.001

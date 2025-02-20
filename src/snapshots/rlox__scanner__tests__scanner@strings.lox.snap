@@ -1,0 +1,35 @@
+---
+source: src/scanner.rs
+expression: scan_tokens(&input)
+input_file: test_programs/scanning/strings.lox
+---
+Ok(
+    [
+        Token {
+            ty: String,
+            lexeme: "",
+            literal: Some(
+                String(
+                    "",
+                ),
+            ),
+            line: 1,
+        },
+        Token {
+            ty: String,
+            lexeme: "string",
+            literal: Some(
+                String(
+                    "string",
+                ),
+            ),
+            line: 2,
+        },
+        Token {
+            ty: Eof,
+            lexeme: "",
+            literal: None,
+            line: 6,
+        },
+    ],
+)

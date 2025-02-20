@@ -1,0 +1,6 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/operator/negate_nonnum.lox
+---
+Runtime error: [ line 1 ] : Operand must be a number.

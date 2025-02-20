@@ -1,0 +1,11 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/for/closure_in_body.lox
+---
+4
+1
+4
+2
+4
+3

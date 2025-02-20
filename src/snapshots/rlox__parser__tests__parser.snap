@@ -1,0 +1,49 @@
+---
+source: src/parser.rs
+expression: parser.parse()
+input_file: test_programs/parsing/expressions/parse.lox
+---
+Ok(
+    [
+        VarStatement {
+            name: "a",
+            initializer: Some(
+                AddExpression {
+                    left: GroupingExpression(
+                        MulExpression {
+                            left: LiteralExpression(
+                                Number(
+                                    5.0,
+                                ),
+                            ),
+                            right: GroupingExpression(
+                                SubExpression {
+                                    left: LiteralExpression(
+                                        Number(
+                                            3.0,
+                                        ),
+                                    ),
+                                    right: LiteralExpression(
+                                        Number(
+                                            1.0,
+                                        ),
+                                    ),
+                                    line: 2,
+                                },
+                            ),
+                            line: 2,
+                        },
+                    ),
+                    right: NegExpression(
+                        LiteralExpression(
+                            Number(
+                                1.0,
+                            ),
+                        ),
+                    ),
+                    line: 2,
+                },
+            ),
+        },
+    ],
+)
