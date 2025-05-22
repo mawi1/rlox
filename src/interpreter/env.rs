@@ -42,7 +42,7 @@ impl Environment {
             } else {
                 panic!(
                     "line {}: could not assign variable {} at distance {}",
-                    33, name, distance
+                    distance, name, distance
                 )
             }
         }

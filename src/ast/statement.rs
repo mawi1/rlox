@@ -1,4 +1,4 @@
-use std::{fmt::Debug, rc::Rc};
+use std::{collections::HashMap, fmt::Debug, rc::Rc};
 
 use crate::{interpreter::Exec, resolver::Resolve};
 
@@ -67,3 +67,11 @@ pub struct ReturnStatement {
     pub line: u32,
 }
 impl Statement for ReturnStatement {}
+
+#[derive(Debug)]
+pub struct ClassStatement {
+    pub name: String,
+    pub methods: Rc<HashMap<String, FunctionStatement>>,
+    pub line: u32,
+}
+impl Statement for ClassStatement {}

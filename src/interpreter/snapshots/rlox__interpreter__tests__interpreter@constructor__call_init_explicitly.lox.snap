@@ -1,0 +1,9 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/constructor/call_init_explicitly.lox
+---
+Foo.init(one)
+Foo.init(two)
+Foo instance
+init

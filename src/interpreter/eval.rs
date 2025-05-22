@@ -1,7 +1,7 @@
 use crate::{
     ast::*,
     error::{Error, ErrorDetail},
-    loxtype::LoxType,
+    loxtype::{LoxInstance, LoxType},
     Result,
 };
 
@@ -177,11 +177,48 @@ impl Eval for CallExpression {
                 )));
             }
             callable.call(arguments)
+        } else if let LoxType::Class(class) = callee {
+            class.instantiate(arguments, self.line)
         } else {
             Err(Error::RuntimeError(ErrorDetail::new(
                 self.line,
                 "Can only call functions and classes.",
             )))
         }
+    }
+}
+
+impl Eval for GetExpression {
+    fn eval(&self, ctx: Context) -> Result<LoxType> {
+        let object = self.object.eval(ctx)?;
+        if let LoxType::Instance(instance) = object {
+            LoxInstance::get(instance, &self.name, self.line)
+        } else {
+            Err(Error::RuntimeError(ErrorDetail::new(
+                self.line,
+                "Only instances have properties.",
+            )))
+        }
+    }
+}
+
+impl Eval for SetExpression {
+    fn eval(&self, ctx: Context) -> Result<LoxType> {
+        let object = self.object.eval(ctx.clone())?;
+        if let LoxType::Instance(instance) = object {
+            let value = self.value.eval(ctx)?;
+            Ok(LoxInstance::set(instance, &self.name, value))
+        } else {
+            Err(Error::RuntimeError(ErrorDetail::new(
+                self.line,
+                "Only instances have fields.",
+            )))
+        }
+    }
+}
+
+impl Eval for ThisExpression {
+    fn eval(&self, ctx: Context) -> Result<LoxType> {
+        Ok(ctx.get_at(self.maybe_distance, "this").unwrap())
     }
 }

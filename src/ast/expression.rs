@@ -4,6 +4,7 @@ use crate::{interpreter::Eval, loxtype::LoxType, resolver::Resolve};
 
 pub trait Expression: std::fmt::Debug + Eval + Resolve {
     fn as_any(&self) -> &dyn Any;
+    fn into_any(self: Box<Self>) -> Box<dyn Any>;
 }
 
 #[derive(Debug)]
@@ -81,11 +82,36 @@ pub struct CallExpression {
     pub line: u32,
 }
 
+#[derive(Debug)]
+pub struct GetExpression {
+    pub object: Box<dyn Expression>,
+    pub name: String,
+    pub line: u32,
+}
+
+#[derive(Debug)]
+pub struct SetExpression {
+    pub object: Box<dyn Expression>,
+    pub name: String,
+    pub value: Box<dyn Expression>,
+    pub line: u32,
+}
+
+#[derive(Debug)]
+pub struct ThisExpression {
+    pub line: u32,
+    pub maybe_distance: Option<u32>,
+}
+
 macro_rules! impl_expression {
     ( $($type:ty),* $(,)? ) => {
         $(
             impl Expression for $type {
                 fn as_any(&self) -> &dyn Any {
+                    self
+                }
+
+                fn into_any(self: Box<Self>) -> Box<dyn Any> where Self: Sized + 'static {
                     self
                 }
             }
@@ -103,5 +129,8 @@ impl_expression!(
     VariableExpression,
     AssignExpression,
     LogicalExpression,
-    CallExpression
+    CallExpression,
+    GetExpression,
+    SetExpression,
+    ThisExpression,
 );

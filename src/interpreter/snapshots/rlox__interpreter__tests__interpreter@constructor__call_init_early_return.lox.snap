@@ -1,0 +1,8 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/constructor/call_init_early_return.lox
+---
+init
+init
+Foo instance

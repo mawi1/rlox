@@ -2,11 +2,11 @@ use std::rc::Rc;
 
 use crate::{
     ast::{
-        BlockStatement, ExpressionStatement, FunctionStatement, IfStatement, PrintStatement,
-        ReturnStatement, VarStatement, WhileStatement,
+        BlockStatement, ClassStatement, ExpressionStatement, FunctionStatement, IfStatement,
+        PrintStatement, ReturnStatement, VarStatement, WhileStatement,
     },
     error::{Error, ErrorDetail},
-    loxtype::{LoxFunction, LoxType},
+    loxtype::{LoxClass, LoxFunction, LoxType},
     Result,
 };
 
@@ -77,12 +77,7 @@ impl Exec for WhileStatement {
 
 impl Exec for FunctionStatement {
     fn exec(&self, ctx: Context) -> Result<StatementResult> {
-        let function = LoxFunction {
-            name: self.name.clone(),
-            parameters: self.parameters.iter().map(|p| p.name.clone()).collect(),
-            statements: self.statements.clone(),
-            ctx: ctx.clone(),
-        };
+        let function = LoxFunction::from_statement(self, false, ctx.clone());
         let callable = LoxType::Callable(Rc::new(function));
         ctx.define(&self.name, callable);
         Ok(StatementResult::Void)
@@ -96,5 +91,15 @@ impl Exec for ReturnStatement {
             None => LoxType::Nil,
         };
         Ok(StatementResult::Return(r))
+    }
+}
+
+impl Exec for ClassStatement {
+    fn exec(&self, ctx: Context) -> Result<StatementResult> {
+        ctx.define(&self.name, LoxType::Nil);
+        let class = LoxClass::from_statement(self, ctx.clone());
+        ctx.assign_at(Some(0), &self.name, LoxType::Class(Rc::new(class)))
+            .unwrap();
+        Ok(StatementResult::Void)
     }
 }

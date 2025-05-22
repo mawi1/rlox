@@ -1,0 +1,7 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/this/this_at_top_level.lox
+---
+Resolver error(s):
+[ line 1 ] : Can't use 'this' outside of a class.

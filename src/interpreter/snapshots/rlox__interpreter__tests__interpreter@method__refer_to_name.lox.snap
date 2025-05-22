@@ -1,0 +1,6 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/method/refer_to_name.lox
+---
+Runtime error: [ line 3 ] : Undefined variable 'method'.

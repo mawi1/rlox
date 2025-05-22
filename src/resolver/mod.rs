@@ -10,6 +10,14 @@ use crate::Result;
 #[derive(Debug, PartialEq, Eq)]
 enum FunctionType {
     Function,
+    Initializer,
+    Method,
+}
+
+#[derive(Debug, PartialEq, Eq)]
+enum ClassType {
+    Class,
+    Subclass,
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -21,6 +29,7 @@ enum VariableState {
 pub(crate) struct Scopes {
     scopes: Vec<HashMap<String, VariableState>>,
     function_types: Vec<FunctionType>,
+    class_types: Vec<ClassType>,
     errors: Vec<ErrorDetail>,
 }
 
@@ -29,6 +38,7 @@ impl Scopes {
         Self {
             scopes: vec![],
             function_types: vec![],
+            class_types: vec![],
             errors: vec![],
         }
     }
@@ -41,12 +51,20 @@ impl Scopes {
         self.scopes.pop();
     }
 
-    pub fn begin_function(&mut self) {
-        self.function_types.push(FunctionType::Function);
+    pub(self) fn begin_function(&mut self, fn_type: FunctionType) {
+        self.function_types.push(fn_type);
     }
 
     pub fn end_function(&mut self) {
         self.function_types.pop();
+    }
+
+    pub(self) fn begin_class(&mut self, class_type: ClassType) {
+        self.class_types.push(class_type);
+    }
+
+    pub fn end_class(&mut self) {
+        self.class_types.pop();
     }
 
     pub fn declare(&mut self, name: &str, line: u32) {
@@ -65,13 +83,6 @@ impl Scopes {
     pub fn define(&mut self, name: &str) {
         if let Some(hm) = self.scopes.last_mut() {
             hm.insert(name.to_owned(), VariableState::Defined);
-        }
-    }
-
-    pub fn check_return_statement(&mut self, line: u32) {
-        if self.function_types.len() == 0 {
-            self.errors
-                .push(ErrorDetail::new(line, "Can't return from top-level code."));
         }
     }
 

@@ -1,0 +1,6 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/this/closure.lox
+---
+Foo

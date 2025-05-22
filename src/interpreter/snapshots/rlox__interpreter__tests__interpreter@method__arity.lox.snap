@@ -1,0 +1,14 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/method/arity.lox
+---
+no args
+1
+3
+6
+10
+15
+21
+28
+36

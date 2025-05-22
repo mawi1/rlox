@@ -1,4 +1,4 @@
-use std::{iter::Peekable, rc::Rc};
+use std::{collections::HashMap, iter::Peekable, rc::Rc};
 
 use crate::{
     ast::*,
@@ -11,7 +11,7 @@ use crate::{
     Result,
 };
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 enum FunctionKind {
     Function,
     #[allow(dead_code)]
@@ -111,17 +111,42 @@ impl<'a> Parser<'a> {
 
     fn declaration(&mut self) -> std::result::Result<Box<dyn Statement>, ErrorDetail> {
         match self.tokens.peek().unwrap().ty {
+            Class => self.class_declaration(),
             Var => self.var_declaration(),
-            Fun => self.function(FunctionKind::Function),
+            Fun => Ok(Box::new(self.function(FunctionKind::Function)?)),
             _ => self.statement(),
         }
+    }
+
+    fn class_declaration(&mut self) -> std::result::Result<Box<dyn Statement>, ErrorDetail> {
+        let class_token = self.tokens.next().unwrap();
+        let name = self.consume(Identifier)?;
+        self.consume(LeftBrace)?;
+
+        let mut methods: HashMap<std::string::String, FunctionStatement> = HashMap::new();
+        while self.tokens.peek().is_some_and(|t| t.ty != RightBrace) {
+            let m = self.function(FunctionKind::Method)?;
+            methods.insert(m.name.clone(), m);
+        }
+
+        self.consume(RightBrace)?;
+
+        Ok(Box::new(ClassStatement {
+            name: name.lexeme.clone(),
+            methods: Rc::new(methods),
+            line: class_token.line,
+        }))
     }
 
     fn function(
         &mut self,
         kind: FunctionKind,
-    ) -> std::result::Result<Box<dyn Statement>, ErrorDetail> {
-        let fun_token = self.tokens.next().unwrap();
+    ) -> std::result::Result<FunctionStatement, ErrorDetail> {
+        let function_line = if kind == FunctionKind::Function {
+            self.tokens.next().unwrap().line
+        } else {
+            self.tokens.peek().map_or(self.last_line, |t| t.line)
+        };
         if let Some(name_token) = self.tokens.next_if(|t| t.ty == Identifier) {
             let name = name_token.lexeme.clone();
 
@@ -148,20 +173,20 @@ impl<'a> Parser<'a> {
             }
 
             self.consume(LeftBrace)?;
-            let block = self.block_statement()?;
+            let block: BlockStatement = self.block_statement()?;
 
-            Ok(Box::new(FunctionStatement {
+            Ok(FunctionStatement {
                 name,
                 parameters,
                 statements: Rc::new(block.statements),
-                line: fun_token.line,
-            }))
+                line: function_line,
+            })
         } else {
             let message = match kind {
                 FunctionKind::Function => "Expect function name.",
                 FunctionKind::Method => "Expect method name.",
             };
-            Err(ErrorDetail::new(fun_token.line, message))
+            Err(ErrorDetail::new(function_line, message))
         }
     }
 
@@ -348,21 +373,26 @@ impl<'a> Parser<'a> {
             let value = self.assignment()?;
 
             let expr_any = expr.as_any();
-            match expr_any.downcast_ref::<VariableExpression>() {
-                Some(var_expr) => {
-                    return Ok(Box::new(AssignExpression {
-                        name: var_expr.name.clone(),
-                        value: value,
-                        maybe_distance: None,
-                        line: eq_token.line,
-                    }));
-                }
-                None => {
-                    self.errors.push(ErrorDetail::new(
-                        eq_token.line,
-                        "Invalid assignment target.",
-                    ));
-                }
+            if let Some(var_expr) = expr_any.downcast_ref::<VariableExpression>() {
+                return Ok(Box::new(AssignExpression {
+                    name: var_expr.name.clone(),
+                    value: value,
+                    maybe_distance: None,
+                    line: eq_token.line,
+                }));
+            } else if expr_any.is::<GetExpression>() {
+                let get_expr = expr.into_any().downcast::<GetExpression>().unwrap();
+                return Ok(Box::new(SetExpression {
+                    object: get_expr.object,
+                    name: get_expr.name,
+                    value: value,
+                    line: eq_token.line,
+                }));
+            } else {
+                self.errors.push(ErrorDetail::new(
+                    eq_token.line,
+                    "Invalid assignment target.",
+                ));
             }
         }
         Ok(expr)
@@ -560,6 +590,13 @@ impl<'a> Parser<'a> {
         loop {
             if self.is_next_token_type(LeftParen) {
                 expr = self.finish_call(expr)?;
+            } else if self.is_next_token_type(Dot) {
+                let name = self.consume(Identifier)?;
+                expr = Box::new(GetExpression {
+                    name: name.lexeme.clone(),
+                    object: expr,
+                    line: name.line,
+                });
             } else {
                 break;
             }
@@ -595,6 +632,10 @@ impl<'a> Parser<'a> {
                 }
                 Identifier => Ok(Box::new(VariableExpression {
                     name: token.lexeme.clone(),
+                    maybe_distance: None,
+                    line: token.line,
+                })),
+                This => Ok(Box::new(ThisExpression {
                     maybe_distance: None,
                     line: token.line,
                 })),

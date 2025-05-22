@@ -1,11 +1,14 @@
 use std::rc::Rc;
 
-use crate::ast::{
-    BlockStatement, ExpressionStatement, FunctionStatement, IfStatement, PrintStatement,
-    ReturnStatement, Statement, VarStatement, WhileStatement,
+use crate::{
+    ast::{
+        BlockStatement, ClassStatement, ExpressionStatement, FunctionStatement, IfStatement,
+        PrintStatement, ReturnStatement, Statement, VarStatement, WhileStatement,
+    },
+    error::ErrorDetail,
 };
 
-use super::{Resolve, Scopes};
+use super::{ClassType, FunctionType, Resolve, Scopes};
 
 fn resolve_statements(statements: &mut [Box<dyn Statement>], scopes: &mut Scopes) {
     for statement in statements {
@@ -60,31 +63,77 @@ impl Resolve for WhileStatement {
     }
 }
 
+pub fn resolve_function(
+    fn_statement: &mut FunctionStatement,
+    fn_type: FunctionType,
+    scopes: &mut Scopes,
+) {
+    scopes.begin_function(fn_type);
+    scopes.begin_scope();
+    for param in &fn_statement.parameters {
+        scopes.declare(&param.name, param.line);
+        scopes.define(&param.name);
+    }
+    let mut_statements = Rc::get_mut(&mut fn_statement.statements).unwrap();
+    for statement in mut_statements {
+        statement.resolve(scopes);
+    }
+    scopes.end_scope();
+    scopes.end_function();
+}
+
 impl Resolve for FunctionStatement {
     fn resolve(&mut self, scopes: &mut Scopes) {
         scopes.declare(&self.name, self.line);
         scopes.define(&self.name);
 
-        scopes.begin_function();
-        scopes.begin_scope();
-        for param in &self.parameters {
-            scopes.declare(&param.name, param.line);
-            scopes.define(&param.name);
-        }
-        let mut_statements = Rc::get_mut(&mut self.statements).unwrap();
-        for statement in mut_statements {
-            statement.resolve(scopes);
-        }
-        scopes.end_scope();
-        scopes.end_function();
+        resolve_function(self, FunctionType::Function, scopes);
     }
 }
 
 impl Resolve for ReturnStatement {
     fn resolve(&mut self, scopes: &mut Scopes) {
         if let Some(expression) = &mut self.maybe_expression {
+            if scopes
+                .function_types
+                .last()
+                .is_some_and(|f| *f == FunctionType::Initializer)
+            {
+                scopes.errors.push(ErrorDetail::new(
+                    self.line,
+                    "Can't return a value from an initializer.",
+                ));
+            }
             expression.resolve(scopes);
         }
-        scopes.check_return_statement(self.line);
+        if scopes.function_types.len() == 0 {
+            scopes.errors.push(ErrorDetail::new(
+                self.line,
+                "Can't return from top-level code.",
+            ));
+        };
+    }
+}
+
+impl Resolve for ClassStatement {
+    fn resolve(&mut self, scopes: &mut Scopes) {
+        scopes.begin_class(ClassType::Class);
+
+        scopes.declare(&self.name, self.line);
+        scopes.define(&self.name);
+
+        scopes.begin_scope();
+        scopes.define("this");
+        for method in Rc::get_mut(&mut self.methods).unwrap().values_mut() {
+            let declaration = if method.name == "init" {
+                FunctionType::Initializer
+            } else {
+                FunctionType::Method
+            };
+            resolve_function(method, declaration, scopes);
+        }
+        scopes.end_scope();
+
+        scopes.end_class();
     }
 }

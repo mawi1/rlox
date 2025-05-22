@@ -1,0 +1,6 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/call/object.lox
+---
+Runtime error: [ line 4 ] : Can only call functions and classes.

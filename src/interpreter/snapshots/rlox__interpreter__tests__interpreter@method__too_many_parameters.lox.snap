@@ -1,0 +1,7 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/method/too_many_parameters.lox
+---
+Syntax error(s):
+[ line 258 ] : Can't have more than 255 parameters.
