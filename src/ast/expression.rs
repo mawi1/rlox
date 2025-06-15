@@ -103,6 +103,13 @@ pub struct ThisExpression {
     pub maybe_distance: Option<u32>,
 }
 
+#[derive(Debug)]
+pub struct SuperExpression {
+    pub method: String,
+    pub line: u32,
+    pub maybe_distance: Option<u32>,
+}
+
 macro_rules! impl_expression {
     ( $($type:ty),* $(,)? ) => {
         $(
@@ -133,4 +140,5 @@ impl_expression!(
     GetExpression,
     SetExpression,
     ThisExpression,
+    SuperExpression,
 );

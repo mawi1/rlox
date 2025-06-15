@@ -27,13 +27,26 @@ pub struct LoxFunction {
 }
 
 impl LoxFunction {
-    pub fn from_statement(stmt: &FunctionStatement, is_initializer: bool, ctx: Context) -> Self {
+    pub fn from_statement(
+        stmt: &FunctionStatement,
+        ctx: Context,
+        bind_this: Option<LoxType>,
+    ) -> Self {
+        let is_initializer = bind_this.is_some() && stmt.name == "init";
+        let fn_ctx = if let Some(object) = bind_this {
+            let child_ctx = ctx.new_child_ctx();
+            child_ctx.define("this", object);
+            child_ctx
+        } else {
+            ctx
+        };
+
         Self {
             name: stmt.name.clone(),
             parameters: stmt.parameters.iter().map(|p| p.name.clone()).collect(),
             statements: stmt.statements.clone(),
             is_initializer,
-            ctx,
+            ctx: fn_ctx,
         }
     }
 }
@@ -85,18 +98,11 @@ impl LoxInstance {
             return Ok(field.clone());
         }
 
-        if let Some(method) = instance.borrow().class.methods.get(name) {
-            let child_ctx = instance.borrow().class.ctx.new_child_ctx();
-            child_ctx.define("this", LoxType::Instance(instance.clone()));
-
-            let function = LoxFunction::from_statement(method, method.name == "init", child_ctx);
-            return Ok(LoxType::Callable(Rc::new(function)));
-        }
-
-        Err(Error::RuntimeError(ErrorDetail::new(
-            line,
-            format!("Undefined property \"{}\".", name),
-        )))
+        instance
+            .borrow()
+            .class
+            .get_method(name, LoxType::Instance(instance.clone()), line)
+            .map(|m| LoxType::Callable(Rc::new(m)))
     }
 
     pub fn set(instance: Rc<RefCell<LoxInstance>>, name: &str, value: LoxType) -> LoxType {
@@ -116,24 +122,40 @@ impl Display for LoxInstance {
 
 #[derive(Debug)]
 pub struct LoxClass {
-    name: String,
+    pub name: String,
+    maybe_superclass: Option<Rc<LoxClass>>,
     methods: Rc<HashMap<String, FunctionStatement>>,
     ctx: Context,
 }
 
 impl LoxClass {
-    pub fn from_statement(stmt: &ClassStatement, ctx: Context) -> Self {
+    pub fn new(
+        stmt: &ClassStatement,
+        maybe_superclass: Option<Rc<LoxClass>>,
+        ctx: Context,
+    ) -> Self {
+        let class_ctx = if let Some(superclass) = &maybe_superclass {
+            let child_ctx = ctx.new_child_ctx();
+            child_ctx.define("super", LoxType::Class(superclass.clone()));
+            child_ctx
+        } else {
+            ctx
+        };
+
         Self {
             name: stmt.name.clone(),
+            maybe_superclass,
             methods: stmt.methods.clone(),
-            ctx,
+            ctx: class_ctx,
         }
     }
 
     pub fn instantiate(self: Rc<Self>, init_arguments: Vec<LoxType>, line: u32) -> Result<LoxType> {
         let instance = LoxInstance::new(self.clone());
 
-        let arity = self.methods.get("init").map_or(0, |im| im.parameters.len());
+        let maybe_init_method = self.get_method("init", instance.clone(), line).ok();
+
+        let arity = maybe_init_method.as_ref().map_or(0, |i| i.arity());
         if arity != init_arguments.len() {
             return Err(Error::RuntimeError(ErrorDetail::new(
                 line,
@@ -145,13 +167,26 @@ impl LoxClass {
             )));
         }
 
-        if let Some(init_method) = self.methods.get("init") {
-            let child_ctx = self.ctx.new_child_ctx();
-            child_ctx.define("this", instance.clone());
-            let init_method = LoxFunction::from_statement(init_method, true, child_ctx);
+        if let Some(init_method) = maybe_init_method {
             let _ = init_method.call(init_arguments)?;
         }
         Ok(instance)
+    }
+
+    pub fn get_method(&self, name: &str, this: LoxType, line: u32) -> Result<LoxFunction> {
+        if let Some(f) = self.methods.get(name) {
+            Ok(LoxFunction::from_statement(f, self.ctx.clone(), Some(this)))
+        } else {
+            self.maybe_superclass.as_ref().map_or_else(
+                || {
+                    Err(Error::RuntimeError(ErrorDetail::new(
+                        line,
+                        format!("Undefined property '{}'.", name),
+                    )))
+                },
+                |sc| sc.get_method(name, this, line),
+            )
+        }
     }
 }
 

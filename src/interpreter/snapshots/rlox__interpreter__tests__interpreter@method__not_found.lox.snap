@@ -3,4 +3,4 @@ source: src/interpreter/mod.rs
 expression: output
 input_file: test_programs/interpreter/method/not_found.lox
 ---
-Runtime error: [ line 3 ] : Undefined property "unknown".
+Runtime error: [ line 3 ] : Undefined property 'unknown'.

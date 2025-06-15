@@ -1,0 +1,8 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/super/parenthesized.lox
+---
+Syntax error(s):
+[ line 8 ] : Expect 'Dot'.
+[ line 9 ] : Expect expression.

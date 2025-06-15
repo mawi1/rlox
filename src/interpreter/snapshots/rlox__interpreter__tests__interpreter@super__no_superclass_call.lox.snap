@@ -1,0 +1,7 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/super/no_superclass_call.lox
+---
+Resolver error(s):
+[ line 3 ] : Can't use 'super' in a class with no superclass.

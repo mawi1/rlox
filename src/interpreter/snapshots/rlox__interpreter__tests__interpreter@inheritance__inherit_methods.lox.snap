@@ -1,0 +1,8 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/inheritance/inherit_methods.lox
+---
+foo
+bar
+bar

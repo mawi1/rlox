@@ -1,0 +1,7 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/super/super_in_top_level_function.lox
+---
+Resolver error(s):
+[ line 1 ] : Can't use 'super' outside of a class.

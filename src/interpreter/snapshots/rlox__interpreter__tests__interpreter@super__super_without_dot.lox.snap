@@ -1,0 +1,8 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/super/super_without_dot.lox
+---
+Syntax error(s):
+[ line 6 ] : Expect 'Dot'.
+[ line 7 ] : Expect expression.

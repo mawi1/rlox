@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use crate::{
     ast::*,
     error::{Error, ErrorDetail},
@@ -220,5 +222,20 @@ impl Eval for SetExpression {
 impl Eval for ThisExpression {
     fn eval(&self, ctx: Context) -> Result<LoxType> {
         Ok(ctx.get_at(self.maybe_distance, "this").unwrap())
+    }
+}
+
+impl Eval for SuperExpression {
+    fn eval(&self, ctx: Context) -> Result<LoxType> {
+        let superclass = ctx.get_at(self.maybe_distance, "super").unwrap();
+        let this: LoxType = ctx
+            .get_at(Some(self.maybe_distance.unwrap() - 1), "this")
+            .unwrap();
+
+        if let LoxType::Class(sc) = superclass {
+            sc.get_method(&self.method, this, self.line).map(|m| LoxType::Callable(Rc::new(m)))
+        } else {
+            panic!("Superclass is not a class.");
+        }
     }
 }

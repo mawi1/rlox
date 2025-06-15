@@ -117,10 +117,27 @@ impl Resolve for ReturnStatement {
 
 impl Resolve for ClassStatement {
     fn resolve(&mut self, scopes: &mut Scopes) {
-        scopes.begin_class(ClassType::Class);
+        scopes.begin_class(if self.maybe_superclass.is_some() {
+            ClassType::Subclass
+        } else {
+            ClassType::Class
+        });
 
         scopes.declare(&self.name, self.line);
         scopes.define(&self.name);
+
+        if let Some(superclass) = &mut self.maybe_superclass {
+            if superclass.name == self.name {
+                scopes.errors.push(ErrorDetail::new(
+                    superclass.line,
+                    "A class can't inherit from itself.",
+                ));
+            }
+            superclass.resolve(scopes);
+
+            scopes.begin_scope();
+            scopes.define("super");
+        }
 
         scopes.begin_scope();
         scopes.define("this");
@@ -132,7 +149,12 @@ impl Resolve for ClassStatement {
             };
             resolve_function(method, declaration, scopes);
         }
+        // end this scope
         scopes.end_scope();
+
+        if self.maybe_superclass.is_some() {
+            scopes.end_scope();
+        }
 
         scopes.end_class();
     }

@@ -6,6 +6,7 @@ use crate::{
         PrintStatement, ReturnStatement, VarStatement, WhileStatement,
     },
     error::{Error, ErrorDetail},
+    interpreter::Eval,
     loxtype::{LoxClass, LoxFunction, LoxType},
     Result,
 };
@@ -77,7 +78,7 @@ impl Exec for WhileStatement {
 
 impl Exec for FunctionStatement {
     fn exec(&self, ctx: Context) -> Result<StatementResult> {
-        let function = LoxFunction::from_statement(self, false, ctx.clone());
+        let function = LoxFunction::from_statement(self, ctx.clone(), None);
         let callable = LoxType::Callable(Rc::new(function));
         ctx.define(&self.name, callable);
         Ok(StatementResult::Void)
@@ -96,8 +97,23 @@ impl Exec for ReturnStatement {
 
 impl Exec for ClassStatement {
     fn exec(&self, ctx: Context) -> Result<StatementResult> {
+        let maybe_superclass = self
+            .maybe_superclass
+            .as_ref()
+            .map(|superclass_expression| {
+                if let LoxType::Class(superclass_class) = superclass_expression.eval(ctx.clone())? {
+                    Ok(superclass_class)
+                } else {
+                    Err(Error::RuntimeError(ErrorDetail::new(
+                        superclass_expression.line,
+                        "Superclass must be a class.",
+                    )))
+                }
+            })
+            .transpose()?;
+
         ctx.define(&self.name, LoxType::Nil);
-        let class = LoxClass::from_statement(self, ctx.clone());
+        let class = LoxClass::new(self, maybe_superclass, ctx.clone());
         ctx.assign_at(Some(0), &self.name, LoxType::Class(Rc::new(class)))
             .unwrap();
         Ok(StatementResult::Void)

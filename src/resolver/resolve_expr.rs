@@ -1,10 +1,8 @@
 use crate::{
     ast::{
-        AssignExpression, BinaryExpression, CallExpression, GetExpression, GroupingExpression,
-        LiteralExpression, LogicalExpression, NegExpression, NilExpression, NotExpression,
-        SetExpression, ThisExpression, VariableExpression,
+        AssignExpression, BinaryExpression, CallExpression, GetExpression, GroupingExpression, LiteralExpression, LogicalExpression, NegExpression, NilExpression, NotExpression, SetExpression, SuperExpression, ThisExpression, VariableExpression
     },
-    error::ErrorDetail,
+    error::ErrorDetail, resolver::ClassType,
 };
 
 use super::{Resolve, Scopes};
@@ -99,5 +97,24 @@ impl Resolve for ThisExpression {
         } else {
             self.maybe_distance = scopes.resolve_local("this");
         }
+    }
+}
+
+impl Resolve for SuperExpression {
+    fn resolve(&mut self, scopes: &mut Scopes) {
+        if scopes.class_types.is_empty() {
+            scopes.errors.push(ErrorDetail::new(
+                self.line,
+                "Can't use 'super' outside of a class.",
+            ));
+        }
+        if scopes.class_types.last().is_some_and(|ct| *ct != ClassType::Subclass) {
+            scopes.errors.push(ErrorDetail::new(
+                self.line,
+                "Can't use 'super' in a class with no superclass.",
+            ));
+        }
+
+        self.maybe_distance = scopes.resolve_local("super");
     }
 }

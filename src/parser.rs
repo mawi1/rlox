@@ -14,7 +14,6 @@ use crate::{
 #[derive(Debug, Eq, PartialEq)]
 enum FunctionKind {
     Function,
-    #[allow(dead_code)]
     Method,
 }
 
@@ -121,6 +120,20 @@ impl<'a> Parser<'a> {
     fn class_declaration(&mut self) -> std::result::Result<Box<dyn Statement>, ErrorDetail> {
         let class_token = self.tokens.next().unwrap();
         let name = self.consume(Identifier)?;
+
+        let maybe_superclass = self
+            .tokens
+            .next_if(|t| t.ty == Less)
+            .map(|_| {
+                let identifier_token = self.consume(Identifier)?;
+                Ok(VariableExpression {
+                    name: identifier_token.lexeme.clone(),
+                    maybe_distance: None,
+                    line: identifier_token.line,
+                })
+            })
+            .transpose()?;
+
         self.consume(LeftBrace)?;
 
         let mut methods: HashMap<std::string::String, FunctionStatement> = HashMap::new();
@@ -134,6 +147,7 @@ impl<'a> Parser<'a> {
         Ok(Box::new(ClassStatement {
             name: name.lexeme.clone(),
             methods: Rc::new(methods),
+            maybe_superclass,
             line: class_token.line,
         }))
     }
@@ -639,6 +653,15 @@ impl<'a> Parser<'a> {
                     maybe_distance: None,
                     line: token.line,
                 })),
+                Super => {
+                    self.consume(Dot)?;
+                    let method = self.consume(Identifier)?;
+                    Ok(Box::new(SuperExpression {
+                        method: method.lexeme.clone(),
+                        line: token.line,
+                        maybe_distance: None,
+                    }))
+                }
                 _ => Err(ErrorDetail::new(token.line, "Expect expression.")),
             }
         } else {

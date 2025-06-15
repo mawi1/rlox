@@ -1,6 +1,6 @@
 use std::{collections::HashMap, fmt::Debug, rc::Rc};
 
-use crate::{interpreter::Exec, resolver::Resolve};
+use crate::{ast::VariableExpression, interpreter::Exec, resolver::Resolve};
 
 use super::Expression;
 
@@ -72,6 +72,7 @@ impl Statement for ReturnStatement {}
 pub struct ClassStatement {
     pub name: String,
     pub methods: Rc<HashMap<String, FunctionStatement>>,
+    pub maybe_superclass: Option<VariableExpression>,
     pub line: u32,
 }
 impl Statement for ClassStatement {}

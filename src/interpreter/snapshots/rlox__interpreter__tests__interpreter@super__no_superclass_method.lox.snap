@@ -1,0 +1,6 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/super/no_superclass_method.lox
+---
+Runtime error: [ line 5 ] : Undefined property 'doesNotExist'.

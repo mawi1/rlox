@@ -1,0 +1,8 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/super/super_without_name.lox
+---
+Syntax error(s):
+[ line 5 ] : Expect 'Identifier'.
+[ line 6 ] : Expect expression.

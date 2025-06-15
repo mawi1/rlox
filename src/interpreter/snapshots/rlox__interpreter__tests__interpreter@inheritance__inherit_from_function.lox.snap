@@ -1,0 +1,6 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/inheritance/inherit_from_function.lox
+---
+Runtime error: [ line 3 ] : Superclass must be a class.

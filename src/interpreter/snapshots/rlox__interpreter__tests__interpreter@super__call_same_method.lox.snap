@@ -1,0 +1,7 @@
+---
+source: src/interpreter/mod.rs
+expression: output
+input_file: test_programs/interpreter/super/call_same_method.lox
+---
+Derived.foo()
+Base.foo()
